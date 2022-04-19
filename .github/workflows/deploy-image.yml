@@ -3,6 +3,8 @@ name: Create and publish OCI image
 on:
   push:
     branches: [ release_*, stable/*, devel ]
+    tags:
+      - '*'
   pull_request:
     branches:  [ release_*, stable/*, devel ]
 
@@ -35,14 +37,14 @@ jobs:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           # defaults: schedule and ref types
           # Additional: Set sha tag for each image
-          # And: Main branch is latest for now 
+          # And: devel branch is latest for now 
           tags: |
             type=schedule
             type=ref,event=branch
             type=ref,event=tag
             type=ref,event=pr
             type=sha,prefix=,format=short
-            type=raw,enable=${{ github.ref == 'refs/heads/main' }},value=latest
+            type=raw,enable=${{ github.ref == 'refs/heads/devel' }},value=latest
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
