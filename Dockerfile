@@ -8,7 +8,9 @@ ADD demo/inventory /runner/inventory
 
 # Install Ansible and Runner
 ADD https://releases.ansible.com/ansible-runner/ansible-runner.el8.repo /etc/yum.repos.d/ansible-runner.repo
-RUN dnf install -y epel-release && \
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-* && \
+    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-* && \
+    dnf install -y epel-release && \
     dnf install -y ansible-runner python3-pip sudo rsync openssh-clients sshpass glibc-langpack-en && \
     alternatives --set python /usr/bin/python3 && \
     pip3 install -U pip && \
